@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode } from "react";
 
-type LLMAsAServiceCustomer = {
+export type LLMAsAServiceCustomer = {
   customer_id: string;
   customer_name?: string;
   customer_user_id?: string;

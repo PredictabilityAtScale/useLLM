@@ -181,3 +181,38 @@ Calling **send** makes a secure call to LLMAsAService where a response is marsha
 We have pre-built UIs in the works, but for now, you can call send and display the response wherever needed. An additional property **idle"" can be used to disable the send buttons when a response is ongoing. It will be true when idle, false when busy.
 
 We also accept Abort functionality, and are in the process of documenting that now. If you need it email help@heycasey.io and we'll sort you out.
+
+
+### Next.js / react Example
+
+```typescript
+"use client";  // remove for react
+
+import { useLLM } from "llmasaservice-client";
+
+export default function Home() {
+  const { send, response, idle } = useLLM({
+    project_id: "[your project ocde]",
+  });
+
+  const sendChat = async () => {
+    const cityInput = document.getElementById("city") as HTMLInputElement;
+    if (cityInput) {
+      send(
+        `Write a short three sentence background on the city called: ${cityInput.value}`
+      );
+    }
+  };
+
+  return (
+    <>
+      <input id="city" type="text" placeholder="Enter city name" />
+      <button onClick={sendChat} disabled={!idle}>
+        Get short background for city
+      </button>
+      <p>{response}</p>
+    </>
+  );
+}
+```
+![Next / React Example](images/nextexample.png)

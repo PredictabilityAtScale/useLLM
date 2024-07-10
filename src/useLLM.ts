@@ -1,7 +1,15 @@
 import { useContext, useState } from "react";
 import { LLMService, LLMServiceType } from "./LLMAsAService";
 
-const useLLM = (options?: LLMServiceType) => {
+export interface UseLLMReturnType {
+  send: Function;
+  stop: Function;
+  response: string; 
+  idle: boolean;
+  error: string;
+}
+
+export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
   const [response, setResponse] = useState<string>("");
   const [idle, setIdle] = useState<boolean>(true);
   const [error, setError] = useState<string>("");

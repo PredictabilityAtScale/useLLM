@@ -1,5 +1,29 @@
 # llmasaservice-client
 
+## 0.0.9
+
+### Patch Changes
+
+- Added next.js / react example
+
+## 0.0.8
+
+### Patch Changes
+
+- Exposed return type for useLLM
+
+## 0.0.7
+
+### Patch Changes
+
+- More export changes.
+
+## 0.0.6
+
+### Patch Changes
+
+- Changing the call signatures and exports
+
 ## 0.0.5
 
 ### Patch Changes
