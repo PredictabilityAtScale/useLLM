@@ -1,5 +1,11 @@
 # llmasaservice-client
 
+## 0.0.5
+
+### Patch Changes
+
+- Changing the call signatures of useLLM
+
 ## 0.0.4
 
 ### Patch Changes

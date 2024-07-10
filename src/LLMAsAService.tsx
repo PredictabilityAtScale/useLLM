@@ -31,3 +31,5 @@ export const LLMServiceProvider: React.FC<UserProviderProps> = ({
     </LLMService.Provider>
   );
 };
+
+export default LLMServiceProvider;
