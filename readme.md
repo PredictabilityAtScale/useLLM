@@ -54,11 +54,11 @@ The settings you need are the same settings you would pass to the vendor using t
 
 After logging into the control panel, choose LLMServices from the right panel menu
 
-![LLM Service Page](images\LLMServicesPage.png)
+![LLM Service Page](.\images\LLMServicesPage.png)
 
 1. Click the Add Service box to create your first or another LLM Service Endpoint
 
-![Add LLM Service Page](images\AddLLMService.png)
+![Add LLM Service Page](.\images\AddLLMService.png)
 
 2. Name and choose your Vendor. We will boilerplate that vendors endpoint URL, header and body as a starting point. These will vary based on your needs and the vendor chosen (we are documenting each vendor now, until then email us if you have difficulty). Tip: We use the streaming features for each vendor. So, make sure that the streaming options are enabled. For example, for OpenAI add these at the end of the rest of the body JSON:
 
@@ -92,11 +92,11 @@ Bad (no quotes on names, and trailing , before ending brace):
 6. Click on the Edit button for the new service. The Add or Update API Key and Test buttons will now be enabled. Click **Add or Update API Key**
 7. We properly encrypt and save your API key (we cannot retrieve it for you, if lost, create a new key from your vendor). Get the API key from your LLM Vendor's developer control panel and paste it into the dialog box and click Save. (one of the advantages of using LLMAsAService is that safe key management is in one place, we found this convenient and safer than using command line tools and config files)
 
-![API Key dialog](images\APIKey.png)
+![API Key dialog](.\images\APIKey.png)
 
 8. Make a test call. Click the **Test Call** button and confirm you get a response
 
-![Test Call](images\TestCall.png)
+![Test Call](.\images\TestCall.png)
 
 Repeat those steps for your other providers and configurations (one n north america, one in the EU, one for Azure or Anthropic, etc.)
 
