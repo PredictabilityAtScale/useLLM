@@ -30,5 +30,12 @@
     "openAI",
     "chat"
   ],
-  "homepage": "https://llmasaservice.io"
+  "homepage": "https://llmasaservice.io",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PredictabilityAtScale/useLLM.git"
+  },
+  "bugs": {
+    "url": "https://github.com/PredictabilityAtScale/useLLM/issues"
+  }
 }
