@@ -56,7 +56,7 @@ The settings you need are the same settings you would pass to the vendor using t
 
 After logging into the control panel, choose LLMServices from the right panel menu
 
-![LLM Service Page](.\images\LLMServicesPage.png)
+![LLM Service Page](images\LLMServicesPage.png)
 
 1. Click the Add Service box to create your first or another LLM Service Endpoint
 
