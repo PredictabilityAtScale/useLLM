@@ -1,5 +1,11 @@
 # llmasaservice-client
 
+## 0.0.10
+
+### Patch Changes
+
+- Removing images from NPM package
+
 ## 0.0.9
 
 ### Patch Changes
