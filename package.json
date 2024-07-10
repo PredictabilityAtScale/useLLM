@@ -1,5 +1,5 @@
 {
-  "name": "@llmasaservice/client",
+  "name": "llmasaservice-client",
   "license": "MIT",
   "version": "0.0.1",
   "main": "dist/index.js",
@@ -22,6 +22,5 @@
     "typescript": "^5.5.3"
   },
   "description": "HOC and hook to use the LLMAsAService.io LLM load balancer and firewall",
-  
-  "author": "CASEY, Inc."
+  "author": "CASEY, Inc. <support@heycasey.io>"
 }
