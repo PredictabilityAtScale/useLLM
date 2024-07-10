@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode } from "react";
 
-export type LLMAsAServiceCustomer = {
+type LLMAsAServiceCustomer = {
   customer_id: string;
   customer_name?: string;
   customer_user_id?: string;
@@ -9,7 +9,7 @@ export type LLMAsAServiceCustomer = {
 
 export interface LLMServiceType {
   project_id: string | undefined;
-  customer: LLMAsAServiceCustomer;
+  customer?: LLMAsAServiceCustomer;
 }
 
 export const LLMService = createContext<LLMServiceType | undefined>(undefined);
@@ -17,7 +17,7 @@ export const LLMService = createContext<LLMServiceType | undefined>(undefined);
 interface UserProviderProps {
   children: ReactNode;
   project_id: string | undefined;
-  customer: LLMAsAServiceCustomer;
+  customer?: LLMAsAServiceCustomer;
 }
 
 export const LLMServiceProvider: React.FC<UserProviderProps> = ({
@@ -31,5 +31,3 @@ export const LLMServiceProvider: React.FC<UserProviderProps> = ({
     </LLMService.Provider>
   );
 };
-
-export default LLMService;

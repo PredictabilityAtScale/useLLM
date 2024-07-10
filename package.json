@@ -1,7 +1,7 @@
 {
   "name": "llmasaservice-client",
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -22,5 +22,13 @@
     "typescript": "^5.5.3"
   },
   "description": "HOC and hook to use the LLMAsAService.io LLM load balancer and firewall",
-  "author": "CASEY, Inc. <support@heycasey.io>"
+  "author": "CASEY, Inc. <help@heycasey.io>",
+  "keywords": [
+    "react",
+    "llmasaservice",
+    "llm",
+    "openAI",
+    "chat"
+  ],
+  "homepage": "https://llmasaservice.io"
 }

@@ -6,7 +6,11 @@ const useLLM = (options?: LLMServiceType) => {
   const [idle, setIdle] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
-  const context = useContext(LLMService) ?? options;
+  let context = useContext(LLMService);
+  if (!context) {
+    context = options;
+  }
+
   if (!context) {
     throw new Error(
       "useLLM must be used within a LLMServiceProvider or constructed with options in your useLLM() call."
@@ -51,7 +55,7 @@ const useLLM = (options?: LLMServiceType) => {
       serviceId: service,
       prompt: prompt,
       messages: messages,
-      customer: context?.customer ?? {},
+      customer: context?.customer ?? {}, // if no customer, use the projectId as the customer_id
     });
 
     // trying to get cloudfront oac going. posts need to be signed, but when i add this the call fails...
