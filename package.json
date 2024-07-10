@@ -1,24 +1,27 @@
 {
-    "name": "@llmasaservice/client",
-    "license": "MIT",
-    "version": "0.0.1",
-    "main": "dist/index.js",
-    "module": "dist/index.mjs",
-    "types": "dist/index.d.ts",
-    "scripts": {
-        "build": "tsup index.ts --format cjs,esm --dts",
-        "lint": "tsc"
-    },
-    "peerDependencies": {
-        "react": "^18.3.0",
-        "react-dom": "^18.3.1"
-      },
-    "devDependencies": {
-        "@changesets/cli": "^2.27.7",
-        "@types/react": "^18.3.3",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
-        "tsup": "^8.1.0",
-        "typescript": "^5.5.3"
-    }
+  "name": "@llmasaservice/client",
+  "license": "MIT",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup index.ts --format cjs,esm --dts",
+    "lint": "tsc"
+  },
+  "peerDependencies": {
+    "react": "^18.3.0",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.7",
+    "@types/react": "^18.3.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.3"
+  },
+  "description": "HOC and hook to use the LLMAsAService.io LLM load balancer and firewall",
+  
+  "author": "CASEY, Inc."
 }
