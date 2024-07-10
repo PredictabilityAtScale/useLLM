@@ -1,4 +1,6 @@
 # LLMAsAService.io for Client Side Code
+
+Control panel: ([app.llmasaservice.io](https://app.llmasaservice.io))
 A product by CASEy, Inc ([heycasey.io](https://heycasey.io))
 
 ## What is LLMAsAService.io?

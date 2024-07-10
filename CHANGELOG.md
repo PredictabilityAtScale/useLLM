@@ -1,5 +1,11 @@
 # llmasaservice-client
 
+## 0.0.3
+
+### Patch Changes
+
+- Fixing images in readme
+
 ## 0.0.2
 
 ### Patch Changes
