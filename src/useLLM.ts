@@ -7,6 +7,7 @@ export interface UseLLMReturnType {
   response: string; 
   idle: boolean;
   error: string;
+  setResponse: Function;
 }
 
 export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
@@ -47,7 +48,7 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
    */
   async function send(
     prompt: string,
-    messages = [{ role: "system", content: "You are a useful assistant." }],
+    messages = [],
     stream: boolean = true,
     abortController: AbortController = new AbortController(),
     service: string | null = null // null means use the default service and apply services load balancing
@@ -171,7 +172,7 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
     return result;
   }
 
-  return { response, send, stop, idle, error };
+  return { response, send, stop, idle, error, setResponse };
 };
 
 export default useLLM;

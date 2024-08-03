@@ -1,5 +1,11 @@
 # llmasaservice-client
 
+## 0.0.11
+
+### Patch Changes
+
+- More NPM ignores to reduce package size
+
 ## 0.0.10
 
 ### Patch Changes
