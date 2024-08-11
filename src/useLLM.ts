@@ -57,7 +57,6 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
     setIdle(false);
 
     let errorInFetch = "";
-    const url = "https://chat.llmasaservice.io/";
 
     const responseBody = JSON.stringify({
       projectId: context?.project_id ?? "",
@@ -81,6 +80,7 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
     };
 
     try {
+      const url = context?.url ?? "https://chat.llmasaservice.io/";
       const response = await fetch(url, options);
       if (!response.ok) {
         errorInFetch = `Error: Network error for service. (${response.status} ${response.statusText})`;

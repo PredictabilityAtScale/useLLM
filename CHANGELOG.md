@@ -1,5 +1,18 @@
 # llmasaservice-client
 
+## 0.1.0
+
+### Minor Changes
+
+- URL can be passed as null
+- more small fixes
+
+## 0.0.12
+
+### Patch Changes
+
+- Minor fixes
+
 ## 0.0.11
 
 ### Patch Changes
