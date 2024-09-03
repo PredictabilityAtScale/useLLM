@@ -4,16 +4,18 @@ import { LLMService, LLMServiceType } from "./LLMAsAService";
 export interface UseLLMReturnType {
   send: Function;
   stop: Function;
-  response: string; 
+  response: string;
   idle: boolean;
   error: string;
   setResponse: Function;
+  lastCallId: string;
 }
 
 export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
   const [response, setResponse] = useState<string>("");
   const [idle, setIdle] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
+  const [lastCallId, setLastCallId] = useState<string>("");
 
   let context = useContext(LLMService);
   if (!context) {
@@ -28,7 +30,7 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
 
   /**
    * Stops the fetch request and returns the hook to an idle state. Use this to add abort functionality to your UI.
-   * 
+   *
    * @param controller An AbortController object to stop the fetch request and return this hook to an idle state, the controller should be the same one passed to the send function.
    */
   const stop = (controller: AbortController | null) => {
@@ -73,8 +75,6 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
       mode: "cors" as RequestMode,
       headers: {
         "Content-Type": "text/plain",
-        //"x-Amz-Content-Sha256": sha256.create().update(responseBody).hex(),
-        //"x-Amz-Content-Sha256": "UNSIGNED-PAYLOAD",
       },
       body: responseBody,
     };
@@ -85,17 +85,16 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
       if (!response.ok) {
         errorInFetch = `Error: Network error for service. (${response.status} ${response.statusText})`;
       } else {
+        setLastCallId(response.headers.get("x-callId") ?? "");
         const reader =
           response?.body?.getReader() as ReadableStreamDefaultReader;
         const decoder = new TextDecoder("utf-8");
         setIdle(false);
 
         if (!stream) {
-          setResponse(
-            await readStream(reader, decoder, stream, {
-              signal: options.signal,
-            })
-          );
+          return await readStream(reader, decoder, stream, {
+            signal: options.signal,
+          });
         } else {
           readStream(reader, decoder, stream, {
             signal: options.signal,
@@ -172,7 +171,7 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
     return result;
   }
 
-  return { response, send, stop, idle, error, setResponse };
+  return { response, send, stop, idle, error, setResponse, lastCallId };
 };
 
 export default useLLM;

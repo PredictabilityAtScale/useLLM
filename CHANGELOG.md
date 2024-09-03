@@ -1,5 +1,18 @@
 # llmasaservice-client
 
+## 0.1.2
+
+### Patch Changes
+
+- New non stream send functionality added to return string directly
+
+## 0.1.1
+
+### Patch Changes
+
+- non stream send returns string directly
+- non stream send returns a string rather than setting response
+
 ## 0.1.0
 
 ### Minor Changes
