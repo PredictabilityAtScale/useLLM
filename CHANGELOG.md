@@ -1,5 +1,47 @@
 # llmasaservice-client
 
+## 0.3.0
+
+### Minor Changes
+
+- Final onComplete and onError callbacks added to the send method
+
+## 0.2.5
+
+### Patch Changes
+
+- Debugging callback
+
+## 0.2.4
+
+### Patch Changes
+
+- new callback signature
+
+## 0.2.3
+
+### Patch Changes
+
+- Fixed callback
+
+## 0.2.2
+
+### Patch Changes
+
+- Build fix
+
+## 0.2.1
+
+### Patch Changes
+
+- callback on complete bug fix
+
+## 0.2.0
+
+### Minor Changes
+
+- Added onCompleteCallback to send
+
 ## 0.1.2
 
 ### Patch Changes

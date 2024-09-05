@@ -46,6 +46,8 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
    * @param stream  Determines whether to stream results back in the response property as they return from the service or batch them up and return them all at once in the response property as a string.
    * @param abortController The AbortController used to abort this request once its started. This allows you to add a stop button to your UI.
    * @param service The service to use for the request. If null, load balancing will be applied. This is typically only used for testing.
+   * @param onComplete The callback function to be called once the stream completes, with the final result string.
+   * @param onError The callback function to be called if an error occurs, with the error string.
    * @returns a StreamReader object if stream is true, otherwise a string of the response. Typically this isn't used when streaming, the stream is exposed in the response property.
    */
   async function send(
@@ -53,7 +55,10 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
     messages = [],
     stream: boolean = true,
     abortController: AbortController = new AbortController(),
-    service: string | null = null // null means use the default service and apply services load balancing
+    service: string | null = null, // null means use the default service and apply services load balancing
+    onComplete?: (result: string) => void,
+    onError?: (error: string) => void
+
   ): Promise<ReadableStreamDefaultReader<any> | string | undefined> {
     setResponse("");
     setIdle(false);
@@ -92,13 +97,27 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
         setIdle(false);
 
         if (!stream) {
-          return await readStream(reader, decoder, stream, {
-            signal: options.signal,
-          });
+          return await readStream(
+            reader,
+            decoder,
+            stream,
+            {
+              signal: options.signal,
+            },
+            onComplete,
+            onError
+          );
         } else {
-          readStream(reader, decoder, stream, {
-            signal: options.signal,
-          });
+          readStream(
+            reader,
+            decoder,
+            stream,
+            {
+              signal: options.signal,
+            },
+            onComplete,
+            onError
+          );
 
           return reader;
         }
@@ -109,6 +128,9 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
 
     if (errorInFetch !== "") {
       setError(errorInFetch);
+      if (onError) {
+        onError(errorInFetch);
+      }
       console.error(`Error: Error in fetch. (${errorInFetch})`);
     }
   }
@@ -117,7 +139,9 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
     reader: ReadableStreamDefaultReader,
     decoder: TextDecoder,
     stream: Boolean = true,
-    { signal: signal }: { signal: AbortSignal }
+    { signal: signal }: { signal: AbortSignal },
+    onComplete?: (result: string) => void,
+    onError?: (error: string) => void
   ): Promise<string> {
     let errorInRead = "";
     let result = "";
@@ -165,7 +189,12 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
     if (errorInRead !== "") {
       setError(errorInRead);
       reader.cancel();
+      if (onError) onError(errorInRead);
       setIdle(true);
+    }
+
+    if (onComplete) {
+      onComplete(result);
     }
 
     return result;
