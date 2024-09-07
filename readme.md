@@ -216,3 +216,58 @@ export default function Home() {
 }
 ```
 ![Next / React Example](images/nextexample.png)
+
+# send method reference
+The send method is the main entry point to call LLMs both streaming and synchronous. "prompt" is the only required field. 
+
+The full call signature is -
+
+```typescript
+   /**
+   * Calls the LLM as a service with the given prompt and messages. The response is returned in the response property of the hook.
+   *
+   * @param prompt The prompt to send the the LLM service.
+   * @param messages The history and context messages to send to the LLM service. as an array of {role: string, content: string} objects. for example, [{ role: "system", content: "You are a useful assistant." }]
+   * @param stream  Determines whether to stream results back in the response property as they return from the service or batch them up and return them all at once in the response property as a string.
+   * @param allowCaching Determines whether the service can use cached results or not.
+   * @param service The service to use for the request. If null, load balancing will be applied. This is typically only used for testing.
+   * @param abortController The AbortController used to abort this request once its started. This allows you to add a stop button to your UI.
+   * @param onComplete The callback function to be called once the stream completes, with the final result string.
+   * @param onError The callback function to be called if an error occurs, with the error string.
+   * @returns a StreamReader object if stream is true, otherwise a string of the response. Typically this isn't used when streaming, the stream is exposed in the response property.
+   */
+  async function send(
+    prompt: string,
+    messages = [],
+    stream: boolean = true,
+    allowCaching: boolean = true,
+    service: string | null = null, // null means use the default service and apply services load balancing
+    abortController: AbortController = new AbortController(),
+    onComplete?: (result: string) => void,
+    onError?: (error: string) => void
+  ): Promise<ReadableStreamDefaultReader<any> | string | undefined> { ...
+```
+
+Example:
+
+Sends a streaming request that is progressively resuned in the response property. On full completion, the response is saved to the ValueText state.
+
+```typescript
+await send(
+  "What is 1+1=",
+  [{
+    role: "system",
+    content: "Answer all responses like a pirate"
+  }],
+  true,  // stream (if this is false, the return type of send is a string)
+  false, // don't cache this call
+  null,  // this uses the default services, not any specific group id or service id
+  new AbortController(), // this allows abort functionality in UI's
+  (response: string) => { // this function is called when a streaming response completes fully
+      setValueText(response);
+  },
+  (errorMessage: string) => { // this function is called if there are any errors during the streaming
+      console.errro(errorMessage);
+  }
+);
+```
