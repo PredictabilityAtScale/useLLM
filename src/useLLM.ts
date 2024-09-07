@@ -44,8 +44,9 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
    * @param prompt The prompt to send the the LLM service.
    * @param messages The history and context messages to send to the LLM service. as an array of {role: string, content: string} objects. for example, [{ role: "system", content: "You are a useful assistant." }]
    * @param stream  Determines whether to stream results back in the response property as they return from the service or batch them up and return them all at once in the response property as a string.
-   * @param abortController The AbortController used to abort this request once its started. This allows you to add a stop button to your UI.
+   * @param allowCaching Determines whether the service can use cached results or not.
    * @param service The service to use for the request. If null, load balancing will be applied. This is typically only used for testing.
+   * @param abortController The AbortController used to abort this request once its started. This allows you to add a stop button to your UI.
    * @param onComplete The callback function to be called once the stream completes, with the final result string.
    * @param onError The callback function to be called if an error occurs, with the error string.
    * @returns a StreamReader object if stream is true, otherwise a string of the response. Typically this isn't used when streaming, the stream is exposed in the response property.
@@ -54,11 +55,11 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
     prompt: string,
     messages = [],
     stream: boolean = true,
-    abortController: AbortController = new AbortController(),
+    allowCaching: boolean = true,
     service: string | null = null, // null means use the default service and apply services load balancing
+    abortController: AbortController = new AbortController(),
     onComplete?: (result: string) => void,
     onError?: (error: string) => void
-
   ): Promise<ReadableStreamDefaultReader<any> | string | undefined> {
     setResponse("");
     setIdle(false);
@@ -71,6 +72,7 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
       prompt: prompt,
       messages: messages,
       customer: context?.customer ?? {}, // if no customer, use the projectId as the customer_id
+      allowCaching: allowCaching,
     });
 
     // trying to get cloudfront oac going. posts need to be signed, but when i add this the call fails...

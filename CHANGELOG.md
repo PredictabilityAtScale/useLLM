@@ -1,5 +1,11 @@
 # llmasaservice-client
 
+## 0.4.0
+
+### Minor Changes
+
+- Added the ability to disable cache for some calls on send
+
 ## 0.3.0
 
 ### Minor Changes
