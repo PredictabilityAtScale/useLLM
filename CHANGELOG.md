@@ -1,5 +1,11 @@
 # llmasaservice-client
 
+## 0.5.0
+
+### Minor Changes
+
+- Adding the ability to pass data to the chat service
+
 ## 0.4.0
 
 ### Minor Changes
