@@ -1,5 +1,11 @@
 # llmasaservice-client
 
+## 0.7.0
+
+### Minor Changes
+
+- moved agent to the context and added conversation id
+
 ## 0.6.0
 
 ### Minor Changes

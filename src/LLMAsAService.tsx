@@ -11,6 +11,7 @@ export interface LLMServiceType {
   project_id: string | undefined;
   customer?: LLMAsAServiceCustomer;
   url?: string | null;
+  agent?: string | null;
 }
 
 export const LLMService = createContext<LLMServiceType | undefined>(undefined);
@@ -20,16 +21,18 @@ interface UserProviderProps {
   project_id: string | undefined;
   customer?: LLMAsAServiceCustomer;
   url?: string | null;
+  agent?: string | null;
 }
 
 export const LLMServiceProvider: React.FC<UserProviderProps> = ({
   children,
   project_id,
   customer,
-  url = "https://chat.llmasaservice.io/"
+  url = "https://chat.llmasaservice.io/",
+  agent = null
 }) => {
   return (
-    <LLMService.Provider value={{ project_id, customer, url }}>
+    <LLMService.Provider value={{ project_id, customer, url, agent }}>
       {children}
     </LLMService.Provider>
   );
