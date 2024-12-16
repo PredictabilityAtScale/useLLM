@@ -47,6 +47,7 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
  * @param {boolean} stream - Determines whether to stream results back in the response property as they return from the service or batch them up and return them all at once in the response property as a string.
  * @param {boolean} allowCaching - Determines whether the service can use cached results or not.
  * @param {string | null} service - The service to use for the request. If null, load balancing will be applied. This is typically only used for testing.
+ * @param {string | null} agent - The agent that made this request.
  * @param {AbortController} abortController - The AbortController used to abort this request once it's started. This allows you to add a stop button to your UI.
  * @param {(result: string) => void} onComplete - The callback function to be called once the stream completes, with the final result string.
  * @param {(error: string) => void} onError - The callback function to be called if an error occurs, with the error string.
@@ -59,6 +60,7 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
     stream: boolean = true,
     allowCaching: boolean = true,
     service: string | null = null, // null means use the default service and apply services load balancing
+    agent: string | null = null,
     abortController: AbortController = new AbortController(),
     onComplete?: (result: string) => void,
     onError?: (error: string) => void
@@ -71,6 +73,7 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
     const responseBody = JSON.stringify({
       projectId: context?.project_id ?? "",
       serviceId: service,
+      agentId: agent,
       prompt: prompt,
       messages: messages,
       data: data,

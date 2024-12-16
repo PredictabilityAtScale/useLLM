@@ -11,7 +11,7 @@ The main features are -
 - Streaming responses to give near immediate customer results and feedback
 - Abort and Cancellation of streaming responses
 - Multiple vendors with load-sharing and failover when (not if) they have outages
-- Response caching for identical requests withing a given timeframe
+- Response caching for identical requests withing a given time-frame
 - Secure storage of API keys from one portal
 - Customer token budgeting and management (give trial users an amount of tokens to start with) - 0 to inhibit new customers
 - Customer data tenancy - customer requests can be routed to certain LLM providers and regions based on their settings (Eg. EU customers)
@@ -53,7 +53,7 @@ return (
 ## Step 2 - Create your LLM Service Providers
 You can create any number of LLM Vendor service endpoints. The active services will be load balanced and used for failover if any vendor has an outage or is usage limited. You will ideally have at least two active at all times for reliable failover. You can also create a Chaos Monkey service that will randomly fail calls to prove that failover is effectively working.
 
-The settings you need are the same settings you would pass to the vendor using their API. We make those calls on your behalf from our servers after confiming those requests are allowed.
+The settings you need are the same settings you would pass to the vendor using their API. We make those calls on your behalf from our servers after confirming those requests are allowed.
 
 After logging into the control panel, choose LLMServices from the right panel menu
 
@@ -138,7 +138,7 @@ const {send, response, idle} = useLLM({project_id: "[your LLMAsAService project 
 
 ```
 
-3. Pass the customer making the call. If you wan to track and grant tokens to certain customers, you can pass them by a unique key (you choose, but must be encodedable in JSON, we use a UUID) and an customer identifying name. Tip: pass the customer at the level you want to track. A company id will allow all users for that company to be controlled as a group. We also don't want any PII. So, don't use an email address, we don't need it, and its another siurce of PII data leakage neither of us want.
+3. Pass the customer making the call. If you wan to track and grant tokens to certain customers, you can pass them by a unique key (you choose, but must be encodable in JSON, we use a UUID) and an customer identifying name. Tip: pass the customer at the level you want to track. A company id will allow all users for that company to be controlled as a group. We also don't want any PII. So, don't use an email address, we don't need it, and its another source of PII data leakage neither of us want.
 
 ```typescript
 
@@ -192,7 +192,7 @@ import { useLLM } from "llmasaservice-client";
 
 export default function Home() {
   const { send, response, idle } = useLLM({
-    project_id: "[your project ocde]",
+    project_id: "[your project code]",
   });
 
   const sendChat = async () => {
@@ -223,22 +223,24 @@ The send method is the main entry point to call LLMs both streaming and synchron
 The full call signature is -
 
 ```typescript
-   /**
-   * Calls the LLM as a service with the given prompt and messages. The response is returned in the response property of the hook.
-   *
-   * @param prompt The prompt to send the the LLM service.
-   * @param messages The history and context messages to send to the LLM service. as an array of {role: string, content: string} objects. for example, [{ role: "system", content: "You are a useful assistant." }]
-   * @param stream  Determines whether to stream results back in the response property as they return from the service or batch them up and return them all at once in the response property as a string.
-   * @param allowCaching Determines whether the service can use cached results or not.
-   * @param service The service to use for the request. If null, load balancing will be applied. This is typically only used for testing.
-   * @param abortController The AbortController used to abort this request once its started. This allows you to add a stop button to your UI.
-   * @param onComplete The callback function to be called once the stream completes, with the final result string.
-   * @param onError The callback function to be called if an error occurs, with the error string.
-   * @returns a StreamReader object if stream is true, otherwise a string of the response. Typically this isn't used when streaming, the stream is exposed in the response property.
-   */
+  /**
+ * Calls the LLM as a service with the given prompt and messages. The response is returned in the response property of the hook.
+ *
+ * @param {string} prompt - The prompt to send to the LLM service.
+ * @param {Array<{role: string, content: string}>} messages - The history and context messages to send to the LLM service, as an array of {role: string, content: string} objects. For example, [{ role: "system", content: "You are a useful assistant." }]
+ * @param {Array<{key: string, data: string}>} data - The data to send to the LLM service, as an array of {key: string, data: string} objects. For example, [{ key: "name", value: "John" }]
+ * @param {boolean} stream - Determines whether to stream results back in the response property as they return from the service or batch them up and return them all at once in the response property as a string.
+ * @param {boolean} allowCaching - Determines whether the service can use cached results or not.
+ * @param {string | null} service - The service to use for the request. If null, load balancing will be applied. This is typically only used for testing.
+ * @param {AbortController} abortController - The AbortController used to abort this request once it's started. This allows you to add a stop button to your UI.
+ * @param {(result: string) => void} onComplete - The callback function to be called once the stream completes, with the final result string.
+ * @param {(error: string) => void} onError - The callback function to be called if an error occurs, with the error string.
+ * @returns {Promise<ReadableStreamDefaultReader<any> | string | undefined>} - A StreamReader object if stream is true, otherwise a string of the response. Typically this isn't used when streaming, the stream is exposed in the response property.
+ */
   async function send(
     prompt: string,
     messages = [],
+    data = [],
     stream: boolean = true,
     allowCaching: boolean = true,
     service: string | null = null, // null means use the default service and apply services load balancing
@@ -250,7 +252,7 @@ The full call signature is -
 
 Example:
 
-Sends a streaming request that is progressively resuned in the response property. On full completion, the response is saved to the ValueText state.
+Sends a streaming request that is progressively returned in the response property. On full completion, the response is saved to the ValueText state.
 
 ```typescript
 await send(
@@ -259,6 +261,7 @@ await send(
     role: "system",
     content: "Answer all responses like a pirate"
   }],
+  [], // data to inject
   true,  // stream (if this is false, the return type of send is a string)
   false, // don't cache this call
   null,  // this uses the default services, not any specific group id or service id

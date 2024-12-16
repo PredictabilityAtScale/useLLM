@@ -1,5 +1,17 @@
 # llmasaservice-client
 
+## 0.6.0
+
+### Minor Changes
+
+- pushing agent into the chat
+
+## 0.6.0
+
+### Minor Changes
+
+- Adding agent id
+
 ## 0.5.0
 
 ### Minor Changes
