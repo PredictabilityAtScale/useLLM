@@ -1,5 +1,11 @@
 # llmasaservice-client
 
+## 0.8.0
+
+### Minor Changes
+
+- Adding agent query limit values
+
 ## 0.7.0
 
 ### Minor Changes

@@ -1,10 +1,13 @@
 {
   "name": "llmasaservice-client",
   "license": "MIT",
-  "version": "0.7.0",
+  "version": "0.9.1",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup index.ts --format cjs,esm --dts",
     "lint": "tsc"

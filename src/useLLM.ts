@@ -79,7 +79,7 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
       data: data,
       customer: context?.customer ?? {}, // if no customer, use the projectId as the customer_id
       allowCaching: allowCaching,
-      conversationId: conversation,
+      conversationId: conversation
     });
 
     // trying to get cloudfront oac going. posts need to be signed, but when i add this the call fails...

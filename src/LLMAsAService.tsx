@@ -29,7 +29,7 @@ export const LLMServiceProvider: React.FC<UserProviderProps> = ({
   project_id,
   customer,
   url = "https://chat.llmasaservice.io/",
-  agent = null
+  agent = null,
 }) => {
   return (
     <LLMService.Provider value={{ project_id, customer, url, agent }}>
