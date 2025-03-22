@@ -1,13 +1,34 @@
 import { useContext, useState } from "react";
 import { LLMService, LLMServiceType } from "./LLMAsAService";
 
+export interface Message {
+  role: string;
+  content: string;
+}
+
+export interface DataItem {
+  key: string;
+  data: string;
+}
+
 export interface UseLLMReturnType {
-  send: Function;
-  stop: Function;
+  send: (
+    prompt: string,
+    messages?: Message[],
+    data?: DataItem[],
+    stream?: boolean,
+    allowCaching?: boolean,
+    service?: string | null,
+    conversation?: string | null,
+    abortController?: AbortController,
+    onComplete?: (result: string) => void,
+    onError?: (error: string) => void
+  ) => Promise<ReadableStreamDefaultReader<any> | string | undefined>;
+  stop: (controller: AbortController | null) => void;
   response: string;
   idle: boolean;
   error: string;
-  setResponse: Function;
+  setResponse: (response: string) => void;
   lastCallId: string;
 }
 
@@ -38,25 +59,25 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
     setIdle(true);
   };
 
-/**
- * Calls the LLM as a service with the given prompt and messages. The response is returned in the response property of the hook.
- *
- * @param {string} prompt - The prompt to send to the LLM service.
- * @param {Array<{role: string, content: string}>} messages - The history and context messages to send to the LLM service, as an array of {role: string, content: string} objects. For example, [{ role: "system", content: "You are a useful assistant." }]
- * @param {Array<{key: string, data: string}>} data - The data to send to the LLM service, as an array of {key: string, data: string} objects. For example, [{ key: "name", value: "John" }]
- * @param {boolean} stream - Determines whether to stream results back in the response property as they return from the service or batch them up and return them all at once in the response property as a string.
- * @param {boolean} allowCaching - Determines whether the service can use cached results or not.
- * @param {string | null} service - The service to use for the request. If null, load balancing will be applied. This is typically only used for testing.
- * @param {string | null} conversation - The conversation of this request. If null, this is a one off call with no conversation history
- * @param {AbortController} abortController - The AbortController used to abort this request once it's started. This allows you to add a stop button to your UI.
- * @param {(result: string) => void} onComplete - The callback function to be called once the stream completes, with the final result string.
- * @param {(error: string) => void} onError - The callback function to be called if an error occurs, with the error string.
- * @returns {Promise<ReadableStreamDefaultReader<any> | string | undefined>} - A StreamReader object if stream is true, otherwise a string of the response. Typically this isn't used when streaming, the stream is exposed in the response property.
- */
+  /**
+   * Calls the LLM as a service with the given prompt and messages. The response is returned in the response property of the hook.
+   *
+   * @param {string} prompt - The prompt to send to the LLM service.
+   * @param {Message[]} messages - The history and context messages to send to the LLM service, as an array of {role: string, content: string} objects. For example, [{ role: "system", content: "You are a useful assistant." }]
+   * @param {DataItem[]} data - The data to send to the LLM service, as an array of {key: string, data: string} objects. For example, [{ key: "name", value: "John" }]
+   * @param {boolean} stream - Determines whether to stream results back in the response property as they return from the service or batch them up and return them all at once in the response property as a string.
+   * @param {boolean} allowCaching - Determines whether the service can use cached results or not.
+   * @param {string | null} service - The service to use for the request. If null, load balancing will be applied. This is typically only used for testing.
+   * @param {string | null} conversation - The conversation of this request. If null, this is a one off call with no conversation history
+   * @param {AbortController} abortController - The AbortController used to abort this request once it's started. This allows you to add a stop button to your UI.
+   * @param {(result: string) => void} onComplete - The callback function to be called once the stream completes, with the final result string.
+   * @param {(error: string) => void} onError - The callback function to be called if an error occurs, with the error string.
+   * @returns {Promise<ReadableStreamDefaultReader<any> | string | undefined>} - A StreamReader object if stream is true, otherwise a string of the response. Typically this isn't used when streaming, the stream is exposed in the response property.
+   */
   async function send(
     prompt: string,
-    messages = [],
-    data = [],
+    messages: Message[] = [],
+    data: DataItem[] = [],
     stream: boolean = true,
     allowCaching: boolean = true,
     service: string | null = null, // null means use the default service and apply services load balancing
@@ -79,7 +100,7 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
       data: data,
       customer: context?.customer ?? {}, // if no customer, use the projectId as the customer_id
       allowCaching: allowCaching,
-      conversationId: conversation
+      conversationId: conversation,
     });
 
     // trying to get cloudfront oac going. posts need to be signed, but when i add this the call fails...
