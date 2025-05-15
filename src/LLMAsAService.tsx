@@ -12,6 +12,7 @@ export interface LLMServiceType {
   customer?: LLMAsAServiceCustomer;
   url?: string | null;
   agent?: string | null;
+  tools?: [] | null;
 }
 
 export const LLMService = createContext<LLMServiceType | undefined>(undefined);
@@ -22,6 +23,7 @@ interface UserProviderProps {
   customer?: LLMAsAServiceCustomer;
   url?: string | null;
   agent?: string | null;
+  tools?: [] | null;
 }
 
 export const LLMServiceProvider: React.FC<UserProviderProps> = ({

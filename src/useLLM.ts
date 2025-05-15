@@ -101,6 +101,7 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
       customer: context?.customer ?? {}, // if no customer, use the projectId as the customer_id
       allowCaching: allowCaching,
       conversationId: conversation,
+      tools: context?.tools ?? [],
     });
 
     // trying to get cloudfront oac going. posts need to be signed, but when i add this the call fails...
@@ -164,12 +165,11 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
       console.error(`Error: Error in fetch. (${errorInFetch})`);
     }
   }
-
   async function readStream(
     reader: ReadableStreamDefaultReader,
     decoder: TextDecoder,
     stream: Boolean = true,
-    { signal: signal }: { signal: AbortSignal },
+    { signal }: { signal: AbortSignal },
     onComplete?: (result: string) => void,
     onError?: (error: string) => void
   ): Promise<string> {
@@ -178,49 +178,44 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
 
     while (true) {
       try {
-        // Check if the stream has been aborted
         if (signal.aborted) {
           reader.cancel();
-          setIdle(true);
           break;
         }
 
-        // Read a chunk of data from the stream
         const { value, done } = await reader.read();
 
-        if (decoder.decode(value).startsWith("Error:")) {
-          errorInRead = decoder.decode(value).substring(6);
+        const decoded = decoder.decode(value);
+        result += decoded;
+
+        if (stream) {
+          setResponse(result);
+        }
+
+        if (decoded.startsWith("Error:")) {
+          errorInRead = decoded.substring(6);
           break;
         }
 
-        // If the stream has been read to the end, exit the loop
         if (done) {
-          setIdle(true);
           break;
         }
-
-        // Process the chunk of data
-        result += decoder.decode(value);
-        if (stream) setResponse((prevState: any) => result);
       } catch (error: any) {
-        if (error.name === "AbortError") {
-          break;
+        if (error.name !== "AbortError") {
+          errorInRead = `Read error: ${error.message}`;
         }
-
-        errorInRead = `Reading error  ${error.message}`;
         break;
       } finally {
-        if (signal.aborted) {
-          reader.releaseLock();
-        }
+        if (signal.aborted) reader.releaseLock();
       }
     }
 
-    if (errorInRead !== "") {
+    setIdle(true);
+
+    if (errorInRead) {
       setError(errorInRead);
       reader.cancel();
       if (onError) onError(errorInRead);
-      setIdle(true);
     }
 
     if (onComplete) {
