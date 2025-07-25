@@ -2,6 +2,7 @@ import React, { createContext, ReactNode } from "react";
 
 export type LLMAsAServiceCustomer = {
   customer_id: string;
+  tenant_id?: string;
   customer_name?: string;
   customer_user_id?: string;
   customer_user_email?: string;
