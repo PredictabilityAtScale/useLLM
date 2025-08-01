@@ -6,6 +6,11 @@ export type LLMAsAServiceCustomer = {
   customer_name?: string;
   customer_user_id?: string;
   customer_user_email?: string;
+  tenant_name?: string;
+  tenant_billing_email?: string;
+  tenant_billing_contact_name?: string;
+  tenant_stripe_customer_id?: string;
+  tenant_stripe_subscription_id?: string;
 };
 
 export interface LLMServiceType {
