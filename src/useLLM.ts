@@ -1,5 +1,9 @@
 import { useContext, useState } from "react";
-import { LLMService, LLMServiceType } from "./LLMAsAService";
+import {
+  LLMService,
+  LLMServiceType,
+  LLMAsAServiceCustomer,
+} from "./LLMAsAService";
 
 export interface Message {
   role: string;
@@ -9,6 +13,10 @@ export interface Message {
 export interface DataItem {
   key: string;
   data: string;
+}
+
+export interface SendRequestOptions {
+  batch?: boolean;
 }
 
 export interface UseLLMReturnType {
@@ -22,7 +30,8 @@ export interface UseLLMReturnType {
     conversation?: string | null,
     abortController?: AbortController,
     onComplete?: (result: string) => void,
-    onError?: (error: string) => void
+    onError?: (error: string) => void,
+    requestOptions?: SendRequestOptions
   ) => Promise<ReadableStreamDefaultReader<any> | string | undefined>;
   stop: (controller: AbortController | null) => void;
   response: string;
@@ -30,6 +39,7 @@ export interface UseLLMReturnType {
   error: string;
   setResponse: (response: string) => void;
   lastCallId: string;
+  setCustomer: (customer: LLMAsAServiceCustomer | null) => void;
 }
 
 export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
@@ -37,6 +47,8 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
   const [idle, setIdle] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [lastCallId, setLastCallId] = useState<string>("");
+  const [customerOverride, setCustomerOverride] =
+    useState<LLMAsAServiceCustomer | null>(null);
 
   let context = useContext(LLMService);
   if (!context) {
@@ -84,7 +96,8 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
     conversation: string | null = null,
     abortController: AbortController = new AbortController(),
     onComplete?: (result: string) => void,
-    onError?: (error: string) => void
+    onError?: (error: string) => void,
+    requestOptions?: SendRequestOptions
   ): Promise<ReadableStreamDefaultReader<any> | string | undefined> {
     setResponse("");
     setIdle(false);
@@ -98,10 +111,11 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
       prompt: prompt,
       messages: messages,
       data: data,
-      customer: context?.customer ?? {}, // if no customer, use the projectId as the customer_id
+      customer: customerOverride ?? context?.customer ?? {}, // override customer if set
       allowCaching: allowCaching,
       conversationId: conversation,
       tools: context?.tools ?? [],
+      ...(requestOptions?.batch != null && { batch: requestOptions.batch }),
     });
 
     // trying to get cloudfront oac going. posts need to be signed, but when i add this the call fails...
@@ -225,7 +239,25 @@ export const useLLM = (options?: LLMServiceType): UseLLMReturnType => {
     return result;
   }
 
-  return { response, send, stop, idle, error, setResponse, lastCallId };
+  /**
+   * Sets and overrides the customer making the next call
+   * @param customer Persistently override the customer for all subsequent calls until cleared with null.
+   * This is useful for setting a customer context that will be used in all subsequent calls to
+   */
+  const setCustomer = (customer: LLMAsAServiceCustomer | null) => {
+    setCustomerOverride(customer);
+  };
+
+  return {
+    response,
+    send,
+    stop,
+    idle,
+    error,
+    setResponse,
+    lastCallId,
+    setCustomer,
+  };
 };
 
 export default useLLM;

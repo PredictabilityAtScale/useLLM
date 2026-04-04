@@ -1,5 +1,14 @@
 # llmasaservice-client
 
+## 0.11.0
+
+### Minor Changes
+
+- Added `SendRequestOptions` type and optional `requestOptions` parameter to `send()`.
+  Callers can now pass `{ batch: true }` as the last argument to opt into async batch chat requests.
+  The `batch` flag is included in the outgoing request body when set.
+  `lastCallId`, `onComplete`, and all existing behavior remain fully backward compatible.
+
 ## 0.8.0
 
 ### Minor Changes
